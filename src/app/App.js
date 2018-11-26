@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Navbar from '../navbar/navbar';
 import MessageList from '../message-list/message-list';
+import AddMessage from '../add-message/add-message';
 
 class App extends Component {
 
@@ -17,7 +18,8 @@ class App extends Component {
     this.setState({
       ...this.state,
       messages: json
-    })
+    });
+    console.log(json);
   }
 
   render() {
@@ -25,6 +27,7 @@ class App extends Component {
       <div>
       <Navbar />
       <MessageList messages={this.state.messages}/>
+      <AddMessage />
       </div>
     );
   }
