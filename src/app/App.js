@@ -12,6 +12,9 @@ class App extends Component {
     this.baseUrl = 'http://localhost:8082/api';
     this.addToMessages = this.addToMessages.bind(this);
     this.setStar = this.setStar.bind(this);
+    this.setSelect = this.setSelect.bind(this);
+    this.markAsRead = this.markAsRead.bind(this);
+    this.selected = [];
   }
 
   async componentDidMount () {
@@ -60,11 +63,33 @@ class App extends Component {
     this.componentDidMount();
   }
 
+  async markAsRead () {
+    // await fetch(`${this.baseUrl}/messages`,
+    // {
+    //   method: 'PATCH',
+    //   headers: {
+    //         "Content-Type": "application/json; charset=utf-8"
+    //       },
+    //   body: JSON.stringify({
+    //     messageIds: [this.selected],
+    //     command: 'read',
+    //     read: true
+    //   })
+    // });
+    // this.componentDidMount();
+    console.log(this.selected);
+  }
+
+  setSelect (id) {
+    this.selected.push(id);
+    console.log(this.selected);
+  }
+
   render() {
     return (
       <div>
-      <Navbar />
-      <MessageList messages={this.state.messages} setStar={this.setStar}/>
+      <Navbar markAsRead = {this.markAsRead}/>
+      <MessageList messages={this.state.messages} setStar={this.setStar} setSelect={this.setSelect}/>
       <AddMessage callback = {this.addToMessages} />
       </div>
     );

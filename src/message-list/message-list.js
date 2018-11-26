@@ -10,8 +10,7 @@ class MessageList extends Component {
   }
 
   addToSelect (id) {
-    this.selected.push(id);
-    console.log(this.selected);
+    this.props.setSelect(id);
   }
 
   render() {

@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const Navbar = () => {
-  return (
+class Navbar extends Component {
+
+  constructor(props) {
+    super(props);
+    this.markAsRead = this.markAsRead.bind(this);
+  }
+
+  markAsRead () {
+    this.props.markAsRead();
+  }
+
+  render () {
+    return (
     <div className="row toolbar">
   <div className="col-md-12">
     <p className="pull-right">
@@ -17,7 +28,7 @@ const Navbar = () => {
       <i className="fa fa-minus-square-o"></i>
     </button>
 
-    <button className="btn btn-default">Mark As Read</button>
+    <button onClick={this.markAsRead} className="btn btn-default">Mark As Read</button>
 
     <button className="btn btn-default">Mark As Unread</button>
 
@@ -39,8 +50,9 @@ const Navbar = () => {
       <i className="fa fa-trash-o"></i>
     </button>
   </div>
-</div>
+  </div>
   );
+}
 }
 
 export default Navbar;
