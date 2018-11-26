@@ -3,10 +3,21 @@ import Message from '../messages/messages';
 
 class MessageList extends Component {
 
+  constructor() {
+    super();
+    this.selected = [];
+    this.addToSelect = this.addToSelect.bind(this);
+  }
+
+  addToSelect (id) {
+    this.selected.push(id);
+    console.log(this.selected);
+  }
+
   render() {
-    const { messages } = this.props;
+    const { messages, setStar} = this.props;
     const messageList = messages.map((x, i) => {
-      return <Message key={i} message={x} />;
+      return <Message key={i} message={x} setStar={setStar} setSelect = {this.addToSelect} />;
     })
 
     return (

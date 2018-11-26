@@ -9,7 +9,9 @@ class App extends Component {
   constructor() {
     super();
     this.state = { messages: [] }
-    this.baseUrl = 'http://localhost:8082/api'
+    this.baseUrl = 'http://localhost:8082/api';
+    this.addToMessages = this.addToMessages.bind(this);
+    this.setStar = this.setStar.bind(this);
   }
 
   async componentDidMount () {
@@ -19,15 +21,51 @@ class App extends Component {
       ...this.state,
       messages: json
     });
-    console.log(json);
+  }
+
+  async addToMessages (subject, body) {
+    const newMessage = {
+      subject: subject,
+      body: body,
+      read: false,
+      starred: false,
+      selected: true
+    }
+
+    const newPost = await fetch(`${this.baseUrl}/messages`, {
+      method: "POST",
+      headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+      body: JSON.stringify(newMessage)
+    });
+    const json = await newPost.json();
+    this.setState({
+      ...this.state,
+      messages: [...this.state.messages, json]
+    })
+  }
+
+  async setStar (id) {
+    await fetch(`${this.baseUrl}/messages`, {
+      method: 'PATCH',
+      headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+      body: JSON.stringify({
+        messageIds: [id],
+        command: 'star',
+      })
+    });
+    this.componentDidMount();
   }
 
   render() {
     return (
       <div>
       <Navbar />
-      <MessageList messages={this.state.messages}/>
-      <AddMessage />
+      <MessageList messages={this.state.messages} setStar={this.setStar}/>
+      <AddMessage callback = {this.addToMessages} />
       </div>
     );
   }
