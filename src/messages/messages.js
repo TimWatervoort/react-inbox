@@ -23,7 +23,7 @@ class Message extends Component {
     const { message } = this.props;
     const labelList = message.labels.map((x, i) => <Label key={i} label={x} />)
     return (
-      <div className={message.read ? "row message read" : "row message unread"}>
+      <div className={`row message ${message.read ? "read" : "unread"} ${message.selected ? "selected" : ""}`}>
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
