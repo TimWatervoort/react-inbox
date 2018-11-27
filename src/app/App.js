@@ -14,12 +14,14 @@ class App extends Component {
     this.setStar = this.setStar.bind(this);
     this.setSelect = this.setSelect.bind(this);
     this.markAsRead = this.markAsRead.bind(this);
+    this.markAsUnread = this.markAsUnread.bind(this);
     this.selected = [];
   }
 
   async componentDidMount () {
     const response = await fetch (`${this.baseUrl}/messages`);
     const json = await response.json();
+    console.log(json);
     this.setState({
       ...this.state,
       messages: json
@@ -64,31 +66,48 @@ class App extends Component {
   }
 
   async markAsRead () {
-    // await fetch(`${this.baseUrl}/messages`,
-    // {
-    //   method: 'PATCH',
-    //   headers: {
-    //         "Content-Type": "application/json; charset=utf-8"
-    //       },
-    //   body: JSON.stringify({
-    //     messageIds: [this.selected],
-    //     command: 'read',
-    //     read: true
-    //   })
-    // });
-    // this.componentDidMount();
-    console.log(this.selected);
+    await fetch(`${this.baseUrl}/messages`, {
+      method: 'PATCH',
+      headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+      body: JSON.stringify({
+        messageIds: this.selected,
+        command: 'read',
+        read: true
+      })
+    });
+    this.componentDidMount();
+  }
+
+  async markAsUnread () {
+    await fetch(`${this.baseUrl}/messages`, {
+      method: 'PATCH',
+      headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+      body: JSON.stringify({
+        messageIds: this.selected,
+        command: 'read',
+        read: false
+      })
+    });
+    this.componentDidMount();
   }
 
   setSelect (id) {
-    this.selected.push(id);
-    console.log(this.selected);
+    if (this.selected.includes(id)) {
+      const removed = this.selected.filter(x => x !== id);
+      this.selected = removed;
+    } else {
+      this.selected.push(id);
+    }
   }
 
   render() {
     return (
       <div>
-      <Navbar markAsRead = {this.markAsRead}/>
+      <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread}/>
       <MessageList messages={this.state.messages} setStar={this.setStar} setSelect={this.setSelect}/>
       <AddMessage callback = {this.addToMessages} />
       </div>

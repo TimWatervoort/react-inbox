@@ -5,10 +5,15 @@ class Navbar extends Component {
   constructor(props) {
     super(props);
     this.markAsRead = this.markAsRead.bind(this);
+    this.markAsUnread = this.markAsUnread.bind(this);
   }
 
   markAsRead () {
     this.props.markAsRead();
+  }
+
+  markAsUnread () {
+    this.props.markAsUnread();
   }
 
   render () {
@@ -30,7 +35,7 @@ class Navbar extends Component {
 
     <button onClick={this.markAsRead} className="btn btn-default">Mark As Read</button>
 
-    <button className="btn btn-default">Mark As Unread</button>
+    <button onClick={this.markAsUnread} className="btn btn-default">Mark As Unread</button>
 
     <select className="form-control label-select">
       <option>Apply label</option>

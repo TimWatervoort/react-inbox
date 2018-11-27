@@ -5,7 +5,6 @@ class MessageList extends Component {
 
   constructor() {
     super();
-    this.selected = [];
     this.addToSelect = this.addToSelect.bind(this);
   }
 

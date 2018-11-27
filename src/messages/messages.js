@@ -20,7 +20,7 @@ class Message extends Component {
   render() {
     const { message } = this.props;
     return (
-      <div className="row message unread">
+      <div className={message.read ? "row message read" : "row message unread"}>
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
