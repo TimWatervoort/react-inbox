@@ -49,6 +49,19 @@ class Navbar extends Component {
       return x.read === false;
     }).length;
 
+    const selections = this.props.messages.filter(x => {
+      return x.selected === true;
+    }).length;
+
+    let style = '';
+    if (selections === 0) {
+      style = "fa fa-square-o";
+    } else if (selections === this.props.messages.length) {
+      style = "fa fa-check-square-o";
+    } else {
+      style = "fa fa-minus-square-o"
+    }
+
     return (
     <div className="row toolbar">
     <div className="col-md-12">
@@ -62,7 +75,7 @@ class Navbar extends Component {
     </button>
 
     <button onClick={this.bulkSelect} className="btn btn-default">
-      <i className={this.props.selectOn ? "fa fa-check-square-o" : "fa fa-square-o"}></i>
+      <i className={style}></i>
     </button>
 
     <button onClick={this.markAsRead} className="btn btn-default">Mark As Read</button>
