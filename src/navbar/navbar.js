@@ -10,6 +10,7 @@ class Navbar extends Component {
     this.setLabel = this.setLabel.bind(this);
     this.removeLabel = this.removeLabel.bind(this);
     this.bulkSelect = this.bulkSelect.bind(this);
+    this.showCompose = this.showCompose.bind(this);
   }
 
   markAsRead () {
@@ -38,6 +39,10 @@ class Navbar extends Component {
     this.props.removeLabel(e.target.value);
   }
 
+  showCompose () {
+    this.props.showCompose();
+  }
+
   render () {
 
     const unread = this.props.messages.filter(x => {
@@ -52,7 +57,7 @@ class Navbar extends Component {
       {unread === 1 ? 'unread message' : 'unread messages'}
     </p>
 
-    <button className="btn btn-danger">
+    <button onClick = {this.showCompose} className="btn btn-danger">
       <i className="fa fa-plus"></i>
     </button>
 

@@ -8,7 +8,7 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = { messages: [], selectOn: false }
+    this.state = { messages: [], selectOn: false, composeOn: false }
     this.baseUrl = 'http://localhost:8082/api';
     this.addToMessages = this.addToMessages.bind(this);
     this.setStar = this.setStar.bind(this);
@@ -19,6 +19,7 @@ class App extends Component {
     this.setLabel = this.setLabel.bind(this);
     this.removeLabel = this.removeLabel.bind(this);
     this.bulkSelect = this.bulkSelect.bind(this);
+    this.showCompose = this.showCompose.bind(this);
     this.addLabel = '';
     this.tossLabel = '';
     this.selected = [];
@@ -54,6 +55,7 @@ class App extends Component {
     const json = await newPost.json();
     this.setState({
       ...this.state,
+      composeOn: false,
       messages: [...this.state.messages, json]
     })
   }
@@ -133,7 +135,7 @@ class App extends Component {
       })
     });
     const json = await response.json();
-    console.log(json);
+    json.forEach(x =>  x.selected = false);
     this.selected = [];
     this.setState({
       ...this.state,
@@ -235,12 +237,19 @@ class App extends Component {
     });
   }
 
+  showCompose () {
+    this.setState({
+      ...this.state,
+      composeOn: true
+    })
+  }
+
   render() {
     return (
       <div>
-      <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread} throwAway = {this.throwAway} setLabel={this.setLabel} removeLabel={this.removeLabel} bulkSelect={this.bulkSelect} selectOn={this.state.selectOn} messages = {this.state.messages}/>
+      <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread} throwAway = {this.throwAway} setLabel={this.setLabel} removeLabel={this.removeLabel} bulkSelect={this.bulkSelect} selectOn={this.state.selectOn} messages = {this.state.messages} showCompose = {this.showCompose} />
       <MessageList messages={this.state.messages} setStar={this.setStar} setSelect={this.setSelect} selectOn={this.state.selectOn}/>
-      <AddMessage callback = {this.addToMessages} />
+      {this.state.composeOn ? <AddMessage callback = {this.addToMessages} /> : <div></div>}
       </div>
     );
   }

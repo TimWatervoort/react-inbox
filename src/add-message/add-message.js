@@ -34,7 +34,7 @@ class AddMessage extends Component {
   <div className="form-group">
     <label htmlFor="subject" className="col-sm-2 control-label">Subject</label>
     <div className="col-sm-8">
-      <input type="text" className="form-control" id="subject" placeholder="Enter a subject" name="subject" onChange = {this.subjName}></input>
+      <input type="text" className="form-control" id="subject" placeholder="Enter a subject" name="subject" onChange = {this.subjName} autoComplete='off'></input>
     </div>
   </div>
   <div className="form-group">
