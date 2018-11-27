@@ -13,9 +13,13 @@ class MessageList extends Component {
   }
 
   render() {
-    const { messages, setStar} = this.props;
+    const { messages, setStar, selectOn } = this.props;
     const messageList = messages.map((x, i) => {
-      return <Message key={i} message={x} setStar={setStar} setSelect = {this.addToSelect} selectOn={this.props.selectOn}/>;
+    if (selectOn === true) {
+        return <Message key={i} message={x} setStar={setStar} setSelect = {this.addToSelect} selected = {true} />
+    } else {
+        return <Message key={i} message={x} setStar={setStar} setSelect = {this.addToSelect} selected = {false} />
+      }
     })
 
     return (

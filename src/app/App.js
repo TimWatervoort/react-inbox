@@ -8,7 +8,7 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = { messages: [], selectOn: false }
+    this.state = { messages: [], selectOn: false, selected: [] }
     this.baseUrl = 'http://localhost:8082/api';
     this.addToMessages = this.addToMessages.bind(this);
     this.setStar = this.setStar.bind(this);
@@ -19,7 +19,6 @@ class App extends Component {
     this.setLabel = this.setLabel.bind(this);
     this.removeLabel = this.removeLabel.bind(this);
     this.bulkSelect = this.bulkSelect.bind(this);
-    this.selected = [];
     this.addLabel = '';
     this.tossLabel = '';
   }
@@ -82,7 +81,7 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.selected,
+        messageIds: this.state.selected,
         command: 'read',
         read: true
       })
@@ -102,7 +101,7 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.selected,
+        messageIds: this.state.selected,
         command: 'read',
         read: false
       })
@@ -121,7 +120,7 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.selected,
+        messageIds: this.state.selected,
         command: 'delete'
       })
     });
@@ -135,14 +134,21 @@ class App extends Component {
   }
 
   setSelect (id) {
-    if (this.selected.includes(id)) {
-      const removed = this.selected.filter(x => x !== id);
-      this.selected = removed;
-      // console.log(this.selected);
+    if (this.state.selected.includes(parseInt(id))) {
+      const removed = this.state.selected.filter(x => parseInt(x) !== parseInt(id));
+      this.setState({
+        ...this.state,
+        selected: removed
+      });
     } else {
-      this.selected.push(id);
-      // console.log(this.selected);
+      let idVar = parseInt(id);
+      this.setState({
+        ...this.state,
+        selected: [...this.state.selected, idVar]
+      })
     }
+    // this.componentDidMount();
+
   }
 
   bulkSelect () {
@@ -151,12 +157,19 @@ class App extends Component {
       ...this.state,
       selectOn: val
     })
-    if (this.selected.length === this.state.messages.length){
-      this.selected = [];
+    if (this.state.selected.length === this.state.messages.length){
+      this.setState({
+        ...this.state,
+        selected: []
+      })
     } else {
-      this.selected = this.state.messages.map(x => x.id);
+      let messIds = this.state.messages.map(x => x.id);
+      this.setState({
+        ...this.state,
+        selected: messIds
+      });
     }
-    // console.log(this.selected);
+    console.log(this.state.selectOn);
   }
 
   async setLabel (label) {
@@ -167,7 +180,7 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.selected,
+        messageIds: this.state.selected,
         command: 'addLabel',
         label: this.addLabel
       })
@@ -187,7 +200,7 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.selected,
+        messageIds: this.state.selected,
         command: 'removeLabel',
         label: this.tossLabel
       })
