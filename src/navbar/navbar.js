@@ -7,6 +7,8 @@ class Navbar extends Component {
     this.markAsRead = this.markAsRead.bind(this);
     this.markAsUnread = this.markAsUnread.bind(this);
     this.throwAway = this.throwAway.bind(this);
+    this.setLabel = this.setLabel.bind(this);
+    this.removeLabel = this.removeLabel.bind(this);
   }
 
   markAsRead () {
@@ -19,6 +21,16 @@ class Navbar extends Component {
 
   throwAway () {
     this.props.throwAway();
+  }
+
+  setLabel = (e) => {
+    e.preventDefault();
+    this.props.setLabel(e.target.value);
+  }
+
+  removeLabel = e => {
+    e.preventDefault();
+    this.props.removeLabel(e.target.value);
   }
 
   render () {
@@ -42,14 +54,14 @@ class Navbar extends Component {
 
     <button onClick={this.markAsUnread} className="btn btn-default">Mark As Unread</button>
 
-    <select className="form-control label-select">
+    <select onChange={this.setLabel} className="form-control label-select">
       <option>Apply label</option>
       <option value="dev">dev</option>
       <option value="personal">personal</option>
       <option value="gschool">gschool</option>
     </select>
 
-    <select className="form-control label-select">
+    <select onChange={this.removeLabel} className="form-control label-select">
       <option>Remove label</option>
       <option value="dev">dev</option>
       <option value="personal">personal</option>

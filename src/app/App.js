@@ -16,7 +16,11 @@ class App extends Component {
     this.markAsRead = this.markAsRead.bind(this);
     this.markAsUnread = this.markAsUnread.bind(this);
     this.throwAway = this.throwAway.bind(this);
+    this.setLabel = this.setLabel.bind(this);
+    this.removeLabel = this.removeLabel.bind(this);
     this.selected = [];
+    this.addLabel = '';
+    this.tossLabel = '';
   }
 
   async componentDidMount () {
@@ -140,10 +144,35 @@ class App extends Component {
     }
   }
 
+  async setLabel (label) {
+    this.addLabel = label;
+    const response = await fetch(`${this.baseUrl}/messages`, {
+      method: 'PATCH',
+      headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+      body: JSON.stringify({
+        messageIds: this.selected,
+        command: 'addLabel',
+        label: this.addLabel
+      })
+    });
+    const json = await response.json();
+    this.setState({
+      ...this.state,
+      messages:json
+    });
+  }
+
+  async removeLabel (label) {
+    this.tossLabel = label;
+    console.log(this.tossLabel);
+  }
+
   render() {
     return (
       <div>
-      <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread} throwAway = {this.throwAway} />
+      <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread} throwAway = {this.throwAway} setLabel={this.setLabel} removeLabel={this.removeLabel}/>
       <MessageList messages={this.state.messages} setStar={this.setStar} setSelect={this.setSelect}/>
       <AddMessage callback = {this.addToMessages} />
       </div>
