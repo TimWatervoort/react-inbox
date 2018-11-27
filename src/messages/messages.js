@@ -3,8 +3,8 @@ import Label from '../labels/labels';
 
 class Message extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.select = this.select.bind(this);
     this.selected = false;
   }
@@ -22,6 +22,10 @@ class Message extends Component {
   }
 
   render() {
+    if (this.props.selectOn){
+      this.selected = true;
+    }
+    // console.log(this.selected);
     const { message } = this.props;
     const labelList = message.labels.map((x, i) => <Label key={i} label={x} />)
     return (
@@ -29,7 +33,7 @@ class Message extends Component {
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
-              <input defaultChecked={this.selected} type="checkbox" id={`select${message.id}`} onClick={this.select}/>
+              <input defaultChecked={!!this.selected} type="checkbox" id={`select${message.id}`} onClick={this.select}/>
             </div>
             <div onClick={this.star} className="col-xs-2">
               <i className={message.starred ? "star fa fa-star" : "star fa fa-star-o"} id={message.id}></i>

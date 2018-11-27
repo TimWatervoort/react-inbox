@@ -156,7 +156,7 @@ class App extends Component {
     } else {
       this.selected = this.state.messages.map(x => x.id);
     }
-    console.log(this.selected);
+    // console.log(this.selected);
   }
 
   async setLabel (label) {
@@ -203,7 +203,7 @@ class App extends Component {
     return (
       <div>
       <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread} throwAway = {this.throwAway} setLabel={this.setLabel} removeLabel={this.removeLabel} bulkSelect={this.bulkSelect} selectOn={this.state.selectOn}/>
-      <MessageList messages={this.state.messages} setStar={this.setStar} setSelect={this.setSelect}/>
+      <MessageList messages={this.state.messages} setStar={this.setStar} setSelect={this.setSelect} selectOn={this.state.selectOn}/>
       <AddMessage callback = {this.addToMessages} />
       </div>
     );
