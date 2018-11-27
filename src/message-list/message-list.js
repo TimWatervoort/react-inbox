@@ -14,6 +14,7 @@ class MessageList extends Component {
 
   render() {
     const { messages, setStar, selectOn } = this.props;
+
     const messageList = messages.map((x, i) => {
     if (selectOn === true) {
         return <Message key={i} message={x} setStar={setStar} setSelect = {this.addToSelect} selected = {true} />

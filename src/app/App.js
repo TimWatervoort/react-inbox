@@ -8,7 +8,7 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = { messages: [], selectOn: false, selected: [] }
+    this.state = { messages: [], selectOn: false }
     this.baseUrl = 'http://localhost:8082/api';
     this.addToMessages = this.addToMessages.bind(this);
     this.setStar = this.setStar.bind(this);
@@ -21,12 +21,14 @@ class App extends Component {
     this.bulkSelect = this.bulkSelect.bind(this);
     this.addLabel = '';
     this.tossLabel = '';
+    this.selected = [];
   }
 
   async componentDidMount () {
     const response = await fetch (`${this.baseUrl}/messages`);
     const json = await response.json();
     console.log(json);
+    json.forEach(x =>  x.selected = false);
     this.setState({
       ...this.state,
       messages: json
@@ -81,14 +83,17 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.state.selected,
+        messageIds: this.selected,
         command: 'read',
         read: true
       })
     });
     const json = await response.json();
+    json.forEach(x =>  x.selected = false);
+    this.selected = [];
     this.setState({
       ...this.state,
+      selectOn: false,
       messages: json
     })
     this.componentDidMount();
@@ -101,14 +106,17 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.state.selected,
+        messageIds: this.selected,
         command: 'read',
         read: false
       })
     });
     const json = await response.json();
+    json.forEach(x =>  x.selected = false);
+    this.selected = [];
     this.setState({
       ...this.state,
+      selectOn: false,
       messages: json
     })
   }
@@ -120,56 +128,66 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.state.selected,
+        messageIds: this.selected,
         command: 'delete'
       })
     });
     const json = await response.json();
     console.log(json);
+    this.selected = [];
     this.setState({
       ...this.state,
+      selectOn: false,
       messages: json
-    })
-    this.selected = [];
+    });
   }
 
   setSelect (id) {
-    if (this.state.selected.includes(parseInt(id))) {
-      const removed = this.state.selected.filter(x => parseInt(x) !== parseInt(id));
-      this.setState({
-        ...this.state,
-        selected: removed
-      });
+    if (this.selected.includes(parseInt(id))) {
+      const removed = this.selected.filter(x => parseInt(x) !== parseInt(id));
+      this.selected = removed;
     } else {
       let idVar = parseInt(id);
-      this.setState({
-        ...this.state,
-        selected: [...this.state.selected, idVar]
-      })
+      this.selected.push(idVar);
     }
+
+    const selections = this.state.messages.map(x=> {
+      if (x.id === parseInt(id)) {
+        x.selected = !x.selected
+      }
+      return x
+    })
+
+    this.setState({
+      ...this.state,
+      selectOn: false,
+      messages: selections
+    })
     // this.componentDidMount();
 
   }
 
   bulkSelect () {
-    let val = !this.state.selectOn
-    this.setState({
+    if (this.selected.length === this.state.messages.length){
+      this.selected = [];
+      const selections = [...this.state.messages];
+      selections.forEach(x => x.selected = false);
+      this.setState({
       ...this.state,
-      selectOn: val
-    })
-    if (this.state.selected.length === this.state.messages.length){
-      this.setState({
-        ...this.state,
-        selected: []
-      })
+      selectOn: false,
+      messages: selections
+    });
     } else {
-      let messIds = this.state.messages.map(x => x.id);
+      this.selected = this.state.messages.map(x => parseInt(x.id));
+      const selections =  [...this.state.messages];
+      selections.forEach(x => x.selected = true);
       this.setState({
-        ...this.state,
-        selected: messIds
-      });
+      ...this.state,
+      selectOn: true,
+      messages: selections
+    });
     }
-    console.log(this.state.selectOn);
+
   }
 
   async setLabel (label) {
@@ -180,14 +198,17 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.state.selected,
+        messageIds: this.selected,
         command: 'addLabel',
         label: this.addLabel
       })
     });
     const json = await response.json();
+    this.selected = [];
+    json.forEach(x =>  x.selected = false);
     this.setState({
       ...this.state,
+      selectOn: false,
       messages:json
     });
   }
@@ -200,14 +221,16 @@ class App extends Component {
             "Content-Type": "application/json; charset=utf-8"
           },
       body: JSON.stringify({
-        messageIds: this.state.selected,
+        messageIds: this.selected,
         command: 'removeLabel',
         label: this.tossLabel
       })
     });
     const json = await response.json();
+    json.forEach(x =>  x.selected = false);
     this.setState({
       ...this.state,
+      selectOn: false,
       messages:json
     });
   }
@@ -215,7 +238,7 @@ class App extends Component {
   render() {
     return (
       <div>
-      <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread} throwAway = {this.throwAway} setLabel={this.setLabel} removeLabel={this.removeLabel} bulkSelect={this.bulkSelect} selectOn={this.state.selectOn}/>
+      <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread} throwAway = {this.throwAway} setLabel={this.setLabel} removeLabel={this.removeLabel} bulkSelect={this.bulkSelect} selectOn={this.state.selectOn} messages = {this.state.messages}/>
       <MessageList messages={this.state.messages} setStar={this.setStar} setSelect={this.setSelect} selectOn={this.state.selectOn}/>
       <AddMessage callback = {this.addToMessages} />
       </div>

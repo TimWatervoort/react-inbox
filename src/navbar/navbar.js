@@ -40,12 +40,16 @@ class Navbar extends Component {
 
   render () {
 
+    const unread = this.props.messages.filter(x => {
+      return x.read === false;
+    }).length;
+
     return (
     <div className="row toolbar">
     <div className="col-md-12">
     <p className="pull-right">
-      <span className="badge badge">2</span>
-      unread messages
+      <span className="badge badge">{unread}</span>
+      {unread === 1 ? 'unread message' : 'unread messages'}
     </p>
 
     <button className="btn btn-danger">

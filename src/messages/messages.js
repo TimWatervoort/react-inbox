@@ -6,7 +6,6 @@ class Message extends Component {
   constructor(props) {
     super(props);
     this.select = this.select.bind(this);
-    this.selected = false;
   }
 
   star = e => {
@@ -15,16 +14,12 @@ class Message extends Component {
   }
 
   select = e => {
-    this.selected = !this.selected;
     const { setSelect } = this.props;
     const y = e.target.id.replace('select', '');
     setSelect(y);
   }
 
   render() {
-    if (this.props.selected === true) {
-      this.selected = true;
-    }
     const { message } = this.props;
     const labelList = message.labels.map((x, i) => <Label key={i} label={x} />)
     return (
@@ -32,7 +27,7 @@ class Message extends Component {
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
-              <input checked={!!this.selected} type="checkbox" id={`select${message.id}`} onChange={this.select}/>
+              <input checked={!!message.selected} type="checkbox" id={`select${message.id}`} onChange={this.select}/>
             </div>
             <div onClick={this.star} className="col-xs-2">
               <i className={message.starred ? "star fa fa-star" : "star fa fa-star-o"} id={message.id}></i>
