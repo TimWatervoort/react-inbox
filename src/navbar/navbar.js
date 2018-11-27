@@ -9,6 +9,7 @@ class Navbar extends Component {
     this.throwAway = this.throwAway.bind(this);
     this.setLabel = this.setLabel.bind(this);
     this.removeLabel = this.removeLabel.bind(this);
+    this.bulkSelect = this.bulkSelect.bind(this);
   }
 
   markAsRead () {
@@ -23,6 +24,10 @@ class Navbar extends Component {
     this.props.throwAway();
   }
 
+  bulkSelect () {
+    this.props.bulkSelect();
+  }
+
   setLabel = (e) => {
     e.preventDefault();
     this.props.setLabel(e.target.value);
@@ -34,9 +39,10 @@ class Navbar extends Component {
   }
 
   render () {
+
     return (
     <div className="row toolbar">
-  <div className="col-md-12">
+    <div className="col-md-12">
     <p className="pull-right">
       <span className="badge badge">2</span>
       unread messages
@@ -46,8 +52,8 @@ class Navbar extends Component {
       <i className="fa fa-plus"></i>
     </button>
 
-    <button className="btn btn-default">
-      <i className="fa fa-minus-square-o"></i>
+    <button onClick={this.bulkSelect} className="btn btn-default">
+      <i className={this.props.selectOn ? "fa fa-check-square-o" : "fa fa-square-o"}></i>
     </button>
 
     <button onClick={this.markAsRead} className="btn btn-default">Mark As Read</button>
