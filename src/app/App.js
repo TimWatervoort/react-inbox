@@ -15,6 +15,7 @@ class App extends Component {
     this.setSelect = this.setSelect.bind(this);
     this.markAsRead = this.markAsRead.bind(this);
     this.markAsUnread = this.markAsUnread.bind(this);
+    this.throwAway = this.throwAway.bind(this);
     this.selected = [];
   }
 
@@ -52,7 +53,7 @@ class App extends Component {
   }
 
   async setStar (id) {
-    await fetch(`${this.baseUrl}/messages`, {
+    const response = await fetch(`${this.baseUrl}/messages`, {
       method: 'PATCH',
       headers: {
             "Content-Type": "application/json; charset=utf-8"
@@ -62,11 +63,15 @@ class App extends Component {
         command: 'star',
       })
     });
-    this.componentDidMount();
+    const json = await response.json();
+    this.setState({
+      ...this.state,
+      messages: json
+    });
   }
 
   async markAsRead () {
-    await fetch(`${this.baseUrl}/messages`, {
+    const response = await fetch(`${this.baseUrl}/messages`, {
       method: 'PATCH',
       headers: {
             "Content-Type": "application/json; charset=utf-8"
@@ -77,11 +82,16 @@ class App extends Component {
         read: true
       })
     });
+    const json = await response.json();
+    this.setState({
+      ...this.state,
+      messages: json
+    })
     this.componentDidMount();
   }
 
   async markAsUnread () {
-    await fetch(`${this.baseUrl}/messages`, {
+    const response = await fetch(`${this.baseUrl}/messages`, {
       method: 'PATCH',
       headers: {
             "Content-Type": "application/json; charset=utf-8"
@@ -92,22 +102,48 @@ class App extends Component {
         read: false
       })
     });
-    this.componentDidMount();
+    const json = await response.json();
+    this.setState({
+      ...this.state,
+      messages: json
+    })
+  }
+
+  async throwAway () {
+    const response = await fetch(`${this.baseUrl}/messages`, {
+      method: 'PATCH',
+      headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+      body: JSON.stringify({
+        messageIds: this.selected,
+        command: 'delete'
+      })
+    });
+    const json = await response.json();
+    console.log(json);
+    this.setState({
+      ...this.state,
+      messages: json
+    })
+    this.selected = [];
   }
 
   setSelect (id) {
     if (this.selected.includes(id)) {
       const removed = this.selected.filter(x => x !== id);
       this.selected = removed;
+      console.log(this.selected);
     } else {
       this.selected.push(id);
+      console.log(this.selected);
     }
   }
 
   render() {
     return (
       <div>
-      <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread}/>
+      <Navbar markAsRead = {this.markAsRead} markAsUnread = {this.markAsUnread} throwAway = {this.throwAway} />
       <MessageList messages={this.state.messages} setStar={this.setStar} setSelect={this.setSelect}/>
       <AddMessage callback = {this.addToMessages} />
       </div>

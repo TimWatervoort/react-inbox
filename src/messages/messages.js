@@ -14,7 +14,8 @@ class Message extends Component {
 
   select = e => {
     const { setSelect } = this.props;
-    setSelect(e.target.id);
+    const y = e.target.id.replace('select', '');
+    setSelect(y);
   }
 
   render() {
@@ -24,7 +25,7 @@ class Message extends Component {
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
-              <input type="checkbox" id={message.id} onClick={this.select}/>
+              <input type="checkbox" id={`select${message.id}`} onClick={this.select}/>
             </div>
             <div onClick={this.star} className="col-xs-2">
               <i className={message.starred ? "star fa fa-star" : "star fa fa-star-o"} id={message.id}></i>

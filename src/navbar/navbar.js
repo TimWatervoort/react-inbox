@@ -6,6 +6,7 @@ class Navbar extends Component {
     super(props);
     this.markAsRead = this.markAsRead.bind(this);
     this.markAsUnread = this.markAsUnread.bind(this);
+    this.throwAway = this.throwAway.bind(this);
   }
 
   markAsRead () {
@@ -14,6 +15,10 @@ class Navbar extends Component {
 
   markAsUnread () {
     this.props.markAsUnread();
+  }
+
+  throwAway () {
+    this.props.throwAway();
   }
 
   render () {
@@ -51,7 +56,7 @@ class Navbar extends Component {
       <option value="gschool">gschool</option>
     </select>
 
-    <button className="btn btn-default">
+    <button onClick={this.throwAway} className="btn btn-default">
       <i className="fa fa-trash-o"></i>
     </button>
   </div>
