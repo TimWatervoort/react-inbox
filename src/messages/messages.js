@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Label from '../labels/labels';
 
 class Message extends Component {
 
@@ -20,6 +21,7 @@ class Message extends Component {
 
   render() {
     const { message } = this.props;
+    const labelList = message.labels.map((x, i) => <Label key={i} label={x} />)
     return (
       <div className={message.read ? "row message read" : "row message unread"}>
         <div className="col-xs-1">
@@ -33,9 +35,10 @@ class Message extends Component {
           </div>
         </div>
         <div className="col-xs-11">
-          <p href="#">
+          {labelList}
+          <span>
             {message.subject}
-          </p>
+          </span>
         </div>
       </div>
     );
