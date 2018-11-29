@@ -28,7 +28,6 @@ class App extends Component {
   async componentDidMount () {
     const response = await fetch (`${this.baseUrl}/messages`);
     const json = await response.json();
-    console.log(json);
     json.forEach(x =>  x.selected = false);
     this.setState({
       ...this.state,
@@ -98,7 +97,6 @@ class App extends Component {
       selectOn: false,
       messages: json
     })
-    this.componentDidMount();
   }
 
   async markAsUnread () {
@@ -165,8 +163,6 @@ class App extends Component {
       selectOn: false,
       messages: selections
     })
-    // this.componentDidMount();
-
   }
 
   bulkSelect () {
