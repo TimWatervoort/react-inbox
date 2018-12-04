@@ -71,6 +71,7 @@ class App extends Component {
       })
     });
     const json = await response.json();
+    json.forEach(x =>  x.selected = false);
     this.setState({
       ...this.state,
       messages: json
