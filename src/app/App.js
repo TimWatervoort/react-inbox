@@ -227,6 +227,7 @@ class App extends Component {
     });
     const json = await response.json();
     json.forEach(x =>  x.selected = false);
+    this.selected = [];
     this.setState({
       ...this.state,
       selectOn: false,
